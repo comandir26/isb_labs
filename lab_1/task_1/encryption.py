@@ -13,6 +13,9 @@ def substitution_cipher(keyword, path_to_original, path_to_result, path_to_encry
         keyword[:len(text) % len(keyword)]
     result = ''
     for text_letter, key_letter in zip(text, keyword):
+        if text_letter.upper() in substitutions:
+            result+=substitutions.get(text_letter.upper())
+            continue
         if text_letter.upper() not in letters:
             result += text_letter
             continue
@@ -28,7 +31,7 @@ def substitution_cipher(keyword, path_to_original, path_to_result, path_to_encry
 
 
 def main() -> None:
-    with open('lab_1/task_1/settings.json', encoding='utf-8') as json_file:
+    with open('lab_1/task_1/settings.json', 'r', encoding='utf-8') as json_file:
         settings = json.load(json_file)
     substitution_cipher(settings['keyword'], settings['original'],
                         settings['encrypted'], settings['encryption_key'])
