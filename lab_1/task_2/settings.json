@@ -1,7 +1,0 @@
-{
-    "encrypted": "lab_1/task_2/cod5.txt",
-    "decrypted": "lab_1/task_2/decrypted.txt",
-    "encryption_key": "lab_1/task_2/encryption_key.json",
-    "frequency_encrypted" : "lab_1/task_2/frequency_encrypted.json",
-    "frequency_alphabet": "lab_1/task_2/frequency_alphabet.json"
-}

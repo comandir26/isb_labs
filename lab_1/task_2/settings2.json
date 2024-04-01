@@ -1,0 +1,6 @@
+{
+    "encrypted": "cod5.txt",
+    "decrypted": "decrypted.txt",
+    "encryption_key": "encryption_key.json",
+    "frequency_encrypted" : "frequency_encrypted.json"
+}

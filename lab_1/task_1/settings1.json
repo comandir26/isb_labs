@@ -1,0 +1,5 @@
+{
+    "original": "original.txt",
+    "encrypted": "encrypted.txt",
+    "encryption_key": "encryption_key.json"
+}
