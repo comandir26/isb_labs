@@ -1,22 +1,22 @@
-import json
+import sys
 import argparse
+from typing import Dict
+
+import files2 as f
 
 
-def frequency_analysis(path_to_encrypted: str, path_to_frequency: str) -> None:
+def frequency_analysis(text: str) -> Dict[str, float]:
     """
     A function for performing frequency analysis of text
 
     Parameters:
-        path_to_encrypted: str
-          The path to the text
-        path_to_frequency: str
-          The path to save the result of analysis
+        text: str
+          Text for analysis
 
     Returns:
-        None
+        sorted_result: Dict[str, float]
+          A dictionary where the key is the symbol and the value is the frequency
     """
-    with open(path_to_encrypted, 'r', encoding='utf-8') as f:
-        text = f.read()
     result = {}
     text_size = len(text)
     for letter in text:
@@ -28,14 +28,34 @@ def frequency_analysis(path_to_encrypted: str, path_to_frequency: str) -> None:
     sorted_key = sorted(result, key=result.get, reverse=True)
     for key in sorted_key:
         sorted_result[key] = result.get(key)
-    with open(path_to_frequency, 'w', encoding='utf-8') as json_file:
-        json.dump(sorted_result, json_file, ensure_ascii=False)
+    return sorted_result
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Frequency analysis')
     parser.add_argument('settings', type=str, help='File with paths')
     args = parser.parse_args()
-    with open(args.settings, 'r', encoding='utf-8') as json_file:
-        settings = json.load(json_file)
-    frequency_analysis(settings['encrypted'], settings['frequency_encrypted'])
+    settings = f.read_json(args.settings)
+    if settings:
+        try:
+            path_to_text = settings['encrypted']
+        except KeyError:
+            print("Текст по заданному пути не найден")
+            sys.exit()
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+            sys.exit()
+        else:
+            text = f.read_text(path_to_text)
+            frequency = frequency_analysis(text)
+    else:
+        print("Файл с параметрами не найден")
+        sys.exit()
+    try:
+        path_to_frequency = settings['frequency_encrypted']
+    except KeyError:
+        print("Путь для сохранения не найден, проверьте имя параметра")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+    else:
+         f.save_json(path_to_frequency, frequency)

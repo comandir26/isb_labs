@@ -1,39 +1,56 @@
-import json
+import sys
 import argparse
 
+import files2 as f
 
-def decryption(path_to_encrypted: str, path_to_key: str, path_to_decrypted: str) -> None:
+
+def decryption(text: str, substitutions: str) -> None:
     """
-    This function decrypts the text using the encryption key,
-    saves the decrypted text.
+    This function decrypts the text using the encryption key.
 
     Parameters:
-        path_to_encrypted: str
-          The path to the encrypted text
-        path_to_key: str
-          The path to the encryption key
-        path_to_decrypted: str
-          The path to save the result of decryption
+        text: str
+          Decrypted text
+        substitutions: str
+          The encryption key
 
     Returns:
-        None
+        result: str
+          Encrypted text
     """
-    with open(path_to_encrypted, 'r', encoding='utf-8') as f:
-        text = f.read()
-    with open(path_to_key, 'r', encoding='utf-8') as json_file:
-        sub = json.load(json_file)
     result = ''
     for letter in text:
-        result += sub.get(letter)
-    with open(path_to_decrypted, 'w', encoding='utf-8') as f:
-        f.write(result)
+        result += substitutions.get(letter)
+    return result
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Text decryption')
     parser.add_argument('settings', type=str, help='File with paths')
     args = parser.parse_args()
-    with open(args.settings, 'r', encoding='utf-8') as json_file:
-        settings = json.load(json_file)
-    decryption(settings['encrypted'], settings['encryption_key'],
-               settings['decrypted'])
+    settings = f.read_json(args.settings)
+    if settings:
+        try:
+            path_to_encrypted = settings['encrypted']
+            path_to_key = settings['encryption_key']
+        except KeyError:
+            print("Параметры по заданным путям не найдены")
+            sys.exit()
+        except Exception as e:
+            print(f"Произошла ошибка: {e}")
+            sys.exit()
+        else:
+            text = f.read_text(path_to_encrypted)
+            substitutions = f.read_json(path_to_key)
+            result = decryption(text, substitutions)
+    else:
+        print("Файл с параметрами не найден")
+        sys.exit()
+    try:
+        path_to_decrypted = settings['decrypted']
+    except KeyError:
+        print("Путь для сохранения не найден, проверьте имя параметра")
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")
+    else:
+        f.save_text(path_to_decrypted, result)     
