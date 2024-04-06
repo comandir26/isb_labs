@@ -14,14 +14,9 @@ def read_text(path_to_text: str) -> Optional[str]:
         text: str
           The read text
     """
-    try:
-        with open(path_to_text, 'r', encoding='utf-8') as f:
+    with open(path_to_text, 'r', encoding='utf-8') as f:
             text = f.read()
-    except FileNotFoundError:
-        text = None
-    finally:
-        return text
-
+            return text
 
 def save_text(path_to_save: str, text: str) -> None:
     """
@@ -52,14 +47,9 @@ def read_json(path_to_data: str) -> Optional[Dict[str, str]]:
         data: Dict[str, str]
           The read data
     """
-    try:
-        with open(path_to_data, 'r', encoding='utf-8') as json_file:
-            data = json.load(json_file)
-    except FileNotFoundError:
-        data = None
-    finally:
+    with open(path_to_data, 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
         return data
-
 
 
 def save_json(path_to_save: str, data: Dict[str, str]) -> None:
