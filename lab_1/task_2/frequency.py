@@ -40,22 +40,20 @@ if __name__ == '__main__':
         try:
             path_to_text = settings['encrypted']
         except KeyError:
-            print("Текст по заданному пути не найден")
-            sys.exit()
-        except Exception as e:
-            print(f"Произошла ошибка: {e}")
+            print("Не удалось получить путь к тексту, проверьте имя параметра")
             sys.exit()
         else:
             text = f.read_text(path_to_text)
+            if text is None:
+                print(f"Не удалось считать текст по адресу: {path_to_text}")
+                sys.exit()
             frequency = frequency_analysis(text)
+        try:
+            path_to_frequency = settings['frequency_encrypted']
+        except KeyError:
+            print("Путь для сохранения не найден, проверьте имя параметра")
+        else:
+            if not f.save_json(path_to_frequency, frequency):
+                print(f'Произошла ошибка при сохранении по адресу: {path_to_frequency}')
     else:
         print("Файл с параметрами не найден")
-        sys.exit()
-    try:
-        path_to_frequency = settings['frequency_encrypted']
-    except KeyError:
-        print("Путь для сохранения не найден, проверьте имя параметра")
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-    else:
-         f.save_json(path_to_frequency, frequency)

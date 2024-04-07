@@ -51,24 +51,23 @@ if __name__ == '__main__':
         try:
             path_to_original = settings["original"]
         except KeyError:
-            print("Текст по заданному пути не найден")
-            sys.exit()
-        except Exception as e:
-            print(f"Произошла ошибка: {e}")
+            print("Не удалось получить путь к тексту, проверьте имя параметра")
             sys.exit()
         else:
             text = f.read_text(path_to_original)
+            if text is None:
+                print(f"Не удалось считать текст по адресу: {path_to_original}")
+                sys.exit()
             result, encryption_key = substitution_cipher(args.keyword, text)
+        try:
+            path_to_encrypted = settings["encrypted"]
+            path_to_key = settings["encryption_key"]
+        except KeyError:
+            print("Пути для сохранения не найдены, проверьте имена параметров")
+        else:
+            if not f.save_text(path_to_encrypted, result) or not f.save_json(path_to_key, 
+                                                                      encryption_key):
+                print(f'Произошла ошибка при сохранении по адресам: {path_to_encrypted},\
+                      {path_to_key}')
     else:
         print("Файл с параметрами не найден")
-        sys.exit()
-    try:
-        path_to_encrypted = settings["encrypted"]
-        path_to_key = settings["encryption_key"]
-    except KeyError:
-        print("Пути для сохранения не найдены, проверьте имена параметров")
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-    else:
-        f.save_text(path_to_encrypted, result)
-        f.save_json(path_to_key, encryption_key)

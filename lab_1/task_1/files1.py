@@ -11,14 +11,19 @@ def read_text(path_to_text: str) -> Optional[str]:
           The path to the text
 
     Returns:
-        text: str
-          The read text
+        Optional[text]: str or None
+          The read text or None
     """
-    with open(path_to_text, 'r', encoding='utf-8') as f:
+    try:
+        with open(path_to_text, 'r', encoding='utf-8') as f:
             text = f.read()
-            return text
+    except FileNotFoundError:
+        text = None
+    finally:
+        return text
+    
 
-def save_text(path_to_save: str, text: str) -> None:
+def save_text(path_to_save: str, text: str) -> bool:
     """
     This function saves the text in the specified path.
 
@@ -29,10 +34,17 @@ def save_text(path_to_save: str, text: str) -> None:
           Text to save
 
     Returns:
-        None
+        saved: bool
+          An indicator showing whether the text has been saved
     """
-    with open(path_to_save, 'w', encoding='utf-8') as f:
-        f.write(text)
+    saved = True
+    try:
+        with open(path_to_save, 'w', encoding='utf-8') as f:
+            f.write(text)
+    except FileNotFoundError:
+        saved = False
+    finally:
+        return saved
 
 
 def read_json(path_to_data: str) -> Optional[Dict[str, str]]:
@@ -44,15 +56,19 @@ def read_json(path_to_data: str) -> Optional[Dict[str, str]]:
           The path to the data
 
     Returns:
-        data: Dict[str, str]
-          The read data
+        data: Optional[Dict[str, str]]
+          The read data or None
     """
-    with open(path_to_data, 'r', encoding='utf-8') as json_file:
-        data = json.load(json_file)
+    try:
+        with open(path_to_data, 'r', encoding='utf-8') as json_file:
+            data = json.load(json_file)
+    except FileNotFoundError:
+        data = None
+    finally:
         return data
 
 
-def save_json(path_to_save: str, data: Dict[str, str]) -> None:
+def save_json(path_to_save: str, data: Dict[str, str]) -> bool:
     """
     This function saves data in json format at the specified path.
 
@@ -63,7 +79,14 @@ def save_json(path_to_save: str, data: Dict[str, str]) -> None:
           Data to save
 
     Returns:
-        None
+        saved: bool
+          An indicator showing whether the text has been saved
     """
-    with open(path_to_save, 'w', encoding='utf-8') as json_file:
-        json.dump(data, json_file, ensure_ascii=False)
+    saved = True
+    try:
+        with open(path_to_save, 'w', encoding='utf-8') as json_file:
+            json.dump(data, json_file, ensure_ascii=False)
+    except FileNotFoundError:
+        saved = False
+    finally:
+        return saved

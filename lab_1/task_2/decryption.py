@@ -34,23 +34,23 @@ if __name__ == '__main__':
             path_to_encrypted = settings['encrypted']
             path_to_key = settings['encryption_key']
         except KeyError:
-            print("Параметры по заданным путям не найдены")
-            sys.exit()
-        except Exception as e:
-            print(f"Произошла ошибка: {e}")
+            print("Не удалось получить путь к тексту или ключу,\
+                  проверьте имена параметров")
             sys.exit()
         else:
             text = f.read_text(path_to_encrypted)
             substitutions = f.read_json(path_to_key)
+            if text is None or substitutions is None:
+                print(f'Не удалось считать текст или ключ по адресу: {path_to_encrypted},\
+                      {path_to_key}')
+                sys.exit()
             result = decryption(text, substitutions)
+        try:
+            path_to_decrypted = settings['decrypted']
+        except KeyError:
+            print("Путь для сохранения не найден, проверьте имя параметра")
+        else:
+            if not f.save_text(path_to_decrypted, result):
+                print(f"Произошла ошибка при сохранени по адресу: {path_to_decrypted}")
     else:
         print("Файл с параметрами не найден")
-        sys.exit()
-    try:
-        path_to_decrypted = settings['decrypted']
-    except KeyError:
-        print("Путь для сохранения не найден, проверьте имя параметра")
-    except Exception as e:
-        print(f"Произошла ошибка: {e}")
-    else:
-        f.save_text(path_to_decrypted, result)     
