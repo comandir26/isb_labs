@@ -51,6 +51,7 @@ if __name__ == '__main__':
             print("Путь для сохранения не найден, проверьте имя параметра")
         else:
             if not save_text(path_to_decrypted, result):
-                print(f"Произошла ошибка при сохранени по адресу: {path_to_decrypted}")
+                print(
+                    f"Произошла ошибка при сохранени по адресу: {path_to_decrypted}")
     else:
         print("Файл с параметрами не найден")

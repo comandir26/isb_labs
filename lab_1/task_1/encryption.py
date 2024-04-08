@@ -6,7 +6,7 @@ from files1 import read_json, read_text, save_text, save_json
 from constants import LETTERS, DATA, MARKS
 
 
-def substitution_cipher(keyword: str, 
+def substitution_cipher(keyword: str,
                         text: str) -> tuple[str, Dict[str, str]]:
     """
     This function encrypts the text by substitution.
@@ -55,7 +55,8 @@ if __name__ == '__main__':
         else:
             text = read_text(path_to_original)
             if text is None:
-                print(f"Не удалось считать текст по адресу: {path_to_original}")
+                print(
+                    f"Не удалось считать текст по адресу: {path_to_original}")
                 sys.exit()
             result, encryption_key = substitution_cipher(args.keyword, text)
         try:
@@ -64,8 +65,8 @@ if __name__ == '__main__':
         except KeyError:
             print("Пути для сохранения не найдены, проверьте имена параметров")
         else:
-            if not save_text(path_to_encrypted, result) or not save_json(path_to_key, 
-                                                                      encryption_key):
+            if not save_text(path_to_encrypted, result) or not save_json(path_to_key,
+                                                                         encryption_key):
                 print(f'Произошла ошибка при сохранении по адресам: {path_to_encrypted},\
                       {path_to_key}')
     else:

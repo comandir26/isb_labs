@@ -54,6 +54,7 @@ if __name__ == '__main__':
             print("Путь для сохранения не найден, проверьте имя параметра")
         else:
             if not save_json(path_to_frequency, frequency):
-                print(f'Произошла ошибка при сохранении по адресу: {path_to_frequency}')
+                print(
+                    f'Произошла ошибка при сохранении по адресу: {path_to_frequency}')
     else:
         print("Файл с параметрами не найден")
