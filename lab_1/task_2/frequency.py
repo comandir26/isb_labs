@@ -2,7 +2,7 @@ import sys
 import argparse
 from typing import Dict
 
-import files2 as f
+from files2 import read_json, read_text, save_json
 
 
 def frequency_analysis(text: str) -> Dict[str, float]:
@@ -35,7 +35,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Frequency analysis')
     parser.add_argument('settings', type=str, help='File with paths')
     args = parser.parse_args()
-    settings = f.read_json(args.settings)
+    settings = read_json(args.settings)
     if settings:
         try:
             path_to_text = settings['encrypted']
@@ -43,7 +43,7 @@ if __name__ == '__main__':
             print("Не удалось получить путь к тексту, проверьте имя параметра")
             sys.exit()
         else:
-            text = f.read_text(path_to_text)
+            text = read_text(path_to_text)
             if text is None:
                 print(f"Не удалось считать текст по адресу: {path_to_text}")
                 sys.exit()
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         except KeyError:
             print("Путь для сохранения не найден, проверьте имя параметра")
         else:
-            if not f.save_json(path_to_frequency, frequency):
+            if not save_json(path_to_frequency, frequency):
                 print(f'Произошла ошибка при сохранении по адресу: {path_to_frequency}')
     else:
         print("Файл с параметрами не найден")

@@ -1,7 +1,7 @@
 import sys
 import argparse
 
-import files2 as f
+from files2 import read_json, read_text, save_text
 
 
 def decryption(text: str, substitutions: str) -> None:
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Text decryption')
     parser.add_argument('settings', type=str, help='File with paths')
     args = parser.parse_args()
-    settings = f.read_json(args.settings)
+    settings = read_json(args.settings)
     if settings:
         try:
             path_to_encrypted = settings['encrypted']
@@ -38,8 +38,8 @@ if __name__ == '__main__':
                   проверьте имена параметров")
             sys.exit()
         else:
-            text = f.read_text(path_to_encrypted)
-            substitutions = f.read_json(path_to_key)
+            text = read_text(path_to_encrypted)
+            substitutions = read_json(path_to_key)
             if text is None or substitutions is None:
                 print(f'Не удалось считать текст или ключ по адресу: {path_to_encrypted},\
                       {path_to_key}')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         except KeyError:
             print("Путь для сохранения не найден, проверьте имя параметра")
         else:
-            if not f.save_text(path_to_decrypted, result):
+            if not save_text(path_to_decrypted, result):
                 print(f"Произошла ошибка при сохранени по адресу: {path_to_decrypted}")
     else:
         print("Файл с параметрами не найден")
