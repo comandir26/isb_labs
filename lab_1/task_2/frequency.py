@@ -1,5 +1,6 @@
 import sys
 import argparse
+
 from typing import Dict
 
 from files2 import read_json, read_text, save_json
