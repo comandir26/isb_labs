@@ -22,7 +22,7 @@ def read_json(path_to_data: str) -> Optional[Dict[str, str]]:
         data = None
     finally:
         return data
-    
+
 
 def save_text(path_to_save: str, text: str) -> bool:
     """
@@ -46,4 +46,3 @@ def save_text(path_to_save: str, text: str) -> bool:
         saved = False
     finally:
         return saved
-    

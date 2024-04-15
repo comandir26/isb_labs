@@ -1,7 +1,8 @@
-#include<iostream>
-#include<random>
+#include <iostream>
+#include <random>
 
-void generate(size_t size) {
+void generate(size_t size)
+{
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> distrib(0, 1);
@@ -11,6 +12,7 @@ void generate(size_t size) {
     }
 }
 
-int main() {
+int main()
+{
     generate(128);
 }
