@@ -1,7 +1,6 @@
 #include<iostream>
 #include<random>
 
-
 void generate(size_t size) {
     std::random_device rd;
     std::mt19937 gen(rd());

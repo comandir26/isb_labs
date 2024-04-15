@@ -1,4 +1,4 @@
 {
     "sequences": "sequences.json",
-    "result": "result.txt"
+    "path_to_result": "result.txt"
 }
