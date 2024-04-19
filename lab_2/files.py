@@ -24,24 +24,31 @@ def read_json(path_to_data: str) -> Optional[Dict[str, str]]:
         return data
 
 
-def save_text(path_to_save: str, text: str) -> bool:
+def save_result(path_to_save: str, result: tuple[float, ...], 
+                lang: str, seq: str) -> bool:
     """
-    This function saves the text in the specified path.
+    This function saves the result of the tests in the specified path.
 
     Parameters:
         path_to_save: str
           The path to save the text
-        text: str
-          Text to save
+        result: tuple[float, ...]
+          The result of three NIST tests
+        lang: str
+          The programming language with which the sequence is obtained
+        seq: str
+          The sequence itself
 
     Returns:
         saved: bool
-          An indicator showing whether the text has been saved
+          An indicator showing whether the result has been saved
     """
     saved = True
+    output = f'{lang}: {seq}\nfrequency_test: {result[0]}\nsame_bits_test: '\
+                f'{result[1]}\nlongest_seq_test: {result[2]}\n\n'
     try:
         with open(path_to_save, 'a', encoding='utf-8') as f:
-            f.write(text)
+            f.write(output)
     except FileNotFoundError:
         saved = False
     finally:

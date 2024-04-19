@@ -1,12 +1,11 @@
 import argparse
+import mpmath
 import math
 import re
 
-from typing import Dict
+from typing import Dict, Generator
 
-import mpmath
-
-from files import read_json, save_text
+from files import read_json, save_result
 from constants import N, M, P_I
 
 
@@ -22,8 +21,8 @@ def frequency_bitwise_test(sequence: str) -> float:
         p_value: float
           Calculated p-value
     """
-    p_value = math.erfc((sum(list(map(lambda x: 1 if x == "1" else -1,
-                                      sequence))) / math.sqrt(N)) / math.sqrt(2))
+    s = sum(list(map(lambda x: 1 if x == "1" else -1, sequence))) / math.sqrt(N)
+    p_value = math.erfc(s / math.sqrt(2))
     return p_value
 
 
@@ -40,7 +39,7 @@ def same_bits_test(sequence: str) -> float:
           Calculated p-value
     """
     ones = sum(list(map(lambda x: 1 if x == "1" else 0, sequence))) / N
-    if abs(ones - 0.5) < 2/math.sqrt(N):
+    if abs(ones - 0.5) < 2 / math.sqrt(N):
         changes = len([m.group(0)
                       for m in re.finditer(r"(\d)\1*", sequence)]) - 1
         p_value = math.erfc(abs(changes - 2 * N * ones * (1 - ones)) /
@@ -83,27 +82,25 @@ def longest_sequence_test(sequence: str) -> float:
     return p_value
 
 
-def sequences_test(sequences: Dict[str, str]) -> str:
+def sequences_test(sequences: Dict[str, str]) -> Generator[tuple[float,
+                                                                 ...], None, None]:
     """
-    This function tests sequences using three NIST tests
+    This generator function tests sequences using three NIST tests
 
     Parameters:
         sequences: Dict[str, str]
           A dictionary where the key is the programming language with which the 
           sequence is obtained and the value is the sequence itself.
 
-    Returns:
-        result: str
-          Test results for all sequences
+    Yields:
+        fb_test, sb_test, ls_test: Generator[tuple[float,...], None, None]:
+          Tests result for sequence
     """
-    result = ''
-    for lang, sequence in sequences.items():
+    for sequence in sequences.values():
         fb_test = frequency_bitwise_test(sequence)
         sb_test = same_bits_test(sequence)
         ls_test = longest_sequence_test(sequence)
-        result += f'{lang}_frequency_test: {fb_test}\n{lang}_same_bits_test: '\
-            f'{sb_test}\n{lang}_longest_seq_test: {ls_test}\n'
-    return result
+        yield fb_test, sb_test, ls_test
 
 
 if __name__ == "__main__":
@@ -115,11 +112,12 @@ if __name__ == "__main__":
         sequences = read_json(settings.get('sequences'))
         path_to_result = settings.get('path_to_result')
         if sequences and path_to_result:
-            result = sequences_test(sequences)
-            if save_text(path_to_result, result):
-                print('Тесты успешно завершены')
-            else:
-                print('Некорректный путь для сохранения результата')
+            for result, lang in zip(sequences_test(sequences), sequences):
+                if save_result(path_to_result, result, lang, sequences[lang]):
+                    print(f'Тест для последовательности на языке {lang} успешно завершен')
+                else:
+                    print('Некорректный путь для сохранения результата')
+                    break
         else:
             print('Данные не найдены, проверьте имена параметров')
     else:
