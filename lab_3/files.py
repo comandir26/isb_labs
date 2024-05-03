@@ -26,7 +26,7 @@ def read_json(path_to_data: str) -> Optional[Dict[str, str]]:
         data = None
     finally:
         return data
-    
+
 
 def read_bytes(path_to_data: str) -> Optional[bytes]:
     """
@@ -38,7 +38,7 @@ def read_bytes(path_to_data: str) -> Optional[bytes]:
           The path to the data
 
     Returns:
-        data: bytes
+        data: Optional[bytes]
           The read data or None
     """
     try:
@@ -59,7 +59,7 @@ def read_text(path_to_text: str) -> Optional[str]:
           The path to the text
 
     Returns:
-        text: str
+        text: Optional[str]
           The read text or None
     """
     try:
@@ -69,7 +69,7 @@ def read_text(path_to_text: str) -> Optional[str]:
         text = None
     finally:
         return text
-    
+
 
 def save_text(path_to_save: str, text: str) -> bool:
     """
@@ -137,15 +137,15 @@ def save_public_key(path_to_save: str, public_key: rsa.RSAPublicKey) -> bool:
     saved = True
     try:
         with open(path_to_save, 'wb') as public_out:
-                public_out.write(public_key.public_bytes(encoding=serialization.Encoding.PEM,
-                                    format=serialization.PublicFormat.SubjectPublicKeyInfo))
+            public_out.write(public_key.public_bytes(encoding=serialization.Encoding.PEM,
+                                                     format=serialization.PublicFormat.SubjectPublicKeyInfo))
     except FileNotFoundError:
         saved = False
     finally:
         return saved
-    
 
-def save_private_key(path_to_save:str, private_key: rsa.RSAPrivateKey) -> bool:
+
+def save_private_key(path_to_save: str, private_key: rsa.RSAPrivateKey) -> bool:
     """
     This function saves the private key in the specified path.
 
@@ -163,13 +163,13 @@ def save_private_key(path_to_save:str, private_key: rsa.RSAPrivateKey) -> bool:
     try:
         with open(path_to_save, 'wb') as private_out:
             private_out.write(private_key.private_bytes(encoding=serialization.Encoding.PEM,
-                                format=serialization.PrivateFormat.TraditionalOpenSSL,
-                                encryption_algorithm=serialization.NoEncryption()))
+                                                        format=serialization.PrivateFormat.TraditionalOpenSSL,
+                                                        encryption_algorithm=serialization.NoEncryption()))
     except FileNotFoundError:
         saved = False
     finally:
         return saved
-    
+
 
 def read_private_key(path_to_key: str) -> Optional[rsa.RSAPrivateKey]:
     """
@@ -180,15 +180,15 @@ def read_private_key(path_to_key: str) -> Optional[rsa.RSAPrivateKey]:
           The path to the key
 
     Returns:
-        key: rsa.RSAPrivateKey
+        key: Optional[rsa.RSAPrivateKey]
           The read key or None
     """
     try:
         with open(path_to_key, 'rb') as pem_in:
-                private_bytes = pem_in.read()
-        key = load_pem_private_key(private_bytes,password=None)
+            private_bytes = pem_in.read()
+        key = load_pem_private_key(private_bytes, password=None)
     except FileNotFoundError:
         key = None
     finally:
         return key
-     
+ 
